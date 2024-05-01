@@ -1,6 +1,8 @@
 import app from "./app.js"
 import {connectDB} from "./db/index.js"
 import { User } from "./models/users.model.js"
+import express from "express"
+
 
 
 connectDB().then(app.listen(8000,()=>{
@@ -8,11 +10,3 @@ connectDB().then(app.listen(8000,()=>{
 })
 )
 
-
-
-
-app.get("/",(req,res)=>{
-    res.json({
-        msg:"ok"
-    })
-})
