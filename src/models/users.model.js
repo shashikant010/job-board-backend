@@ -33,6 +33,12 @@ const userSchema=new Schema ({
         type: String,
         required: [true, 'Password is required']
     },
+    isEmployer:{
+        type:Boolean,
+    },
+    organization:{
+        type:String
+    },
     refreshToken: {
         type: String
     }

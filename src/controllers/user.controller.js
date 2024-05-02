@@ -2,6 +2,7 @@ import asyncHandler from "../utils/asyncHandler.js"
 import { User } from "../models/users.model.js";
 import {ApiError} from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
+import { Job } from "../models/jobs.model.js";
 
 
 const generateAccessAndRefreshToken = async(userId)=>{
@@ -25,7 +26,7 @@ const generateAccessAndRefreshToken = async(userId)=>{
 
 
 const registerUser = asyncHandler(async(req,res,next)=>{
-    const {username,fullName,skills,email,password}=req.body;
+    const {username,fullName,skills,email,password,isEmployer,organization}=req.body;
 
     if([fullName,password,email,username].some((field)=>field?.trim()==="")){
         throw new ApiError(400,"all fields are required")
@@ -46,7 +47,7 @@ const registerUser = asyncHandler(async(req,res,next)=>{
         fullName,
         password,
         email,
-        skills
+        skills,isEmployer,organization
 })
 
 const createdUser= await User.findById(user._id).select("-password")
@@ -104,5 +105,33 @@ const currentUser = asyncHandler(
     }
 )
 
+const postjob = asyncHandler(async(req,res)=>{
+  const {title,skillSet,description}=req.body;
+  if(!title || !skillSet || !description){
+    throw new ApiError(401,"All fields are required")
+  }
+  const user=req.user;
+  console.log(user)
+  if(!user){
+    throw new ApiError(400,"unAuthorized request please login")
+  }
 
-export {registerUser,loginUser,currentUser}
+  const job = await Job.create({
+    title,
+    skillSet,
+    description,
+    owner:user
+  })
+
+  return res.status(200).json(
+    new ApiResponse(200,job,"Job posted successfully")
+  )
+})
+
+
+const getAllJobs = asyncHandler(async(req,res)=>{
+    const job = await Job.find()
+    return res.status(200).json(new ApiResponse(200,job,"job fetched successfully"))
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs}
