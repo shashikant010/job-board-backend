@@ -134,4 +134,17 @@ const getAllJobs = asyncHandler(async(req,res)=>{
     return res.status(200).json(new ApiResponse(200,job,"job fetched successfully"))
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs}
+const getitembyid=asyncHandler(async(req,res)=>{
+  const {id}=req.params;
+
+  const item=await User.findById(id);
+
+  if(!item){
+    item= await Job.findById(id);
+  }
+  return res.status(200).json(
+    new ApiResponse(200,item,"item fetched")
+  )
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid}
