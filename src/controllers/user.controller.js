@@ -147,4 +147,24 @@ const getitembyid=asyncHandler(async(req,res)=>{
   )
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid}
+const applyForJob=asyncHandler(async(req,res)=>{
+  const {jobid,userid}=req.body;
+  const job = await Job.findById(jobid);
+  const user = await User.findById(userid);
+
+  job.appliers.map((item)=>{
+    if(item.toString()===userid){
+      throw new ApiError(409,"already Applied")
+    }
+  })
+
+  const updatedjob = await Job.findById(jobid).updateOne({
+    $push:{
+      appliers:user
+    }
+  })
+
+  return res.status(200).json(new ApiResponse(200,job,"applied successfully"))
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob}
