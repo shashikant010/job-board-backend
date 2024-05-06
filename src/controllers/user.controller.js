@@ -3,6 +3,18 @@ import { User } from "../models/users.model.js";
 import {ApiError} from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
 import { Job } from "../models/jobs.model.js";
+import nodemailer from "nodemailer"
+
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // Use `true` for port 465, `false` for all other ports
+  auth: {
+    user: "shashikantyadav9718@gmail.com",
+    pass: "mmpc msww zduo vtej",
+  },
+});
 
 
 const generateAccessAndRefreshToken = async(userId)=>{
@@ -164,7 +176,36 @@ const applyForJob=asyncHandler(async(req,res)=>{
     }
   })
 
+  console.log(user.email)
+  let mailOptions ={
+    from: "shashikantyadav9718@gmail.com",
+    to: user.email,
+    subject: `Heyy you applied succefully for ${job.title}`,
+    text: "Congratulations"
+  }
+
+  const info = await transporter.sendMail(mailOptions,(error,info)=>{
+    if(error){
+      console.log("error while sending mail")
+    }
+    else{
+      console.log("mail sent successfully")
+    }
+  })
+
   return res.status(200).json(new ApiResponse(200,job,"applied successfully"))
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob}
+const searchjob=asyncHandler(async(req,res)=>{
+
+  const {item}=req.params;
+
+  await Job.createIndexes({ title: "text" , plot: "text" })
+
+  const result = await Job.find( { $text: { $search: item } })
+  
+
+  res.status(200).json(new ApiResponse(200,result,"jobs searched successfully"))
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob}
