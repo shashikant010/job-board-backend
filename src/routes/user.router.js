@@ -1,5 +1,5 @@
 
-import { registerUser,loginUser, currentUser, postjob, getAllJobs, getitembyid, applyForJob, searchjob } from "../controllers/user.controller.js"
+import { registerUser,loginUser, currentUser, postjob, getAllJobs, getitembyid, applyForJob, searchjob, sendOtp } from "../controllers/user.controller.js"
 
 
 import { Router } from "express"
@@ -23,5 +23,7 @@ router.route("/getitem/:id").post(getitembyid)
 router.route("/applyforjob").post(applyForJob)
 
 router.route("/searchjob/:item").post(searchjob)
+
+router.route("/sendOtp").post(sendOtp)
 
 export default router ;

@@ -184,7 +184,7 @@ const applyForJob=asyncHandler(async(req,res)=>{
     text: "Congratulations"
   }
 
-  const info = await transporter.sendMail(mailOptions,(error,info)=>{
+  await transporter.sendMail(mailOptions,(error,info)=>{
     if(error){
       console.log("error while sending mail")
     }
@@ -208,4 +208,29 @@ const searchjob=asyncHandler(async(req,res)=>{
   res.status(200).json(new ApiResponse(200,result,"jobs searched successfully"))
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob}
+const sendOtp=asyncHandler(async(req,res)=>{
+  const {email}=req.body
+  const otp=100000 + Math.floor(Math.random() * 900000);;
+  let mailOptions ={
+    from: "shashikantyadav9718@gmail.com",
+    to: email,
+    subject: `Here is your Job Board Otp`,
+    text: `your Otp is : ${otp}`
+  }
+
+  await transporter.sendMail(mailOptions,(error,info)=>{
+    if(error){
+      console.log("error while sending mail")
+    }
+    else{
+      console.log("mail sent successfully")
+    }
+  })
+
+  
+
+  return res.status(200).json(new ApiResponse(200,otp,"Otp sent successfully"))
+
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp}
