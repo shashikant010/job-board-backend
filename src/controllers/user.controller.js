@@ -149,7 +149,7 @@ const getAllJobs = asyncHandler(async(req,res)=>{
 const getitembyid=asyncHandler(async(req,res)=>{
   const {id}=req.params;
 
-  const item=await User.findById(id);
+  let item=await User.findById(id);
 
   if(!item){
     item= await Job.findById(id);
@@ -170,9 +170,15 @@ const applyForJob=asyncHandler(async(req,res)=>{
     }
   })
 
-  const updatedjob = await Job.findById(jobid).updateOne({
+  await Job.findById(jobid).updateOne({
     $push:{
       appliers:user
+    }
+  })
+
+  await User.findById(userid).updateOne({
+    $push:{
+      jobs:job
     }
   })
 

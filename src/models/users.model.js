@@ -29,6 +29,11 @@ const userSchema=new Schema ({
                 type:String,
             }
     ],
+    jobs:[{
+        type:Schema.Types.ObjectId,
+        ref:"Job"
+    }],
+
     password: {
         type: String,
         required: [true, 'Password is required']
