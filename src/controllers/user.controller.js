@@ -206,7 +206,6 @@ const searchjob=asyncHandler(async(req,res)=>{
 
   const {item}=req.params;
 
-  await Job.createIndexes({ title: "text" , plot: "text" })
 
   const result = await Job.find( { $text: { $search: item } })
   
@@ -232,11 +231,36 @@ const sendOtp=asyncHandler(async(req,res)=>{
       console.log("mail sent successfully")
     }
   })
-
-  
-
-  return res.status(200).json(new ApiResponse(200,otp,"Otp sent successfully"))
+ return res.status(200).json(new ApiResponse(200,otp,"Otp sent successfully"))
 
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp}
+
+const removeJob=asyncHandler(async(req,res)=>{
+  const {userid,jobid}=req.body;
+
+  const user = await User.findByIdAndUpdate(userid,
+    {
+      $pull:{
+        jobs:jobid
+      }
+    },{
+      new:true
+    }
+  )
+
+  const job = await Job.findByIdAndUpdate(jobid,
+    {
+      $pull:{
+        appliers:userid
+      }
+    },{
+      new:true
+    }
+  )
+
+  return res.status(200).json(new ApiResponse(200,{user,job},"job removed successfully"))
+
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp,removeJob}
