@@ -223,9 +223,10 @@ const sendOtp=asyncHandler(async(req,res)=>{
     text: `your Otp is : ${otp}`
   }
 
-  await transporter.sendMail(mailOptions,(error,info)=>{
+   transporter.sendMail(mailOptions,(error,info)=>{
     if(error){
-      console.log("error while sending mail")
+      console.log("error while sending mail",error)
+      throw new ApiError("Error while sending Otp",error.message)
     }
     else{
       console.log("mail sent successfully")
