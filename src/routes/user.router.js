@@ -1,5 +1,5 @@
 
-import { registerUser,loginUser, currentUser, postjob, getAllJobs, getitembyid, applyForJob, searchjob, sendOtp, removeJob, getUserByEmail } from "../controllers/user.controller.js"
+import { registerUser,loginUser, currentUser, postjob, getAllJobs, getitembyid, applyForJob, searchjob, sendOtp, removeJob, getUserByEmail, changePassword } from "../controllers/user.controller.js"
 
 
 import { Router } from "express"
@@ -29,5 +29,7 @@ router.route("/sendOtp").post(sendOtp)
 router.route("/removejob").post(removeJob)
 
 router.route("/getuserbymail").post(getUserByEmail)
+
+router.route("/changepassword").post(changePassword)
 
 export default router ;

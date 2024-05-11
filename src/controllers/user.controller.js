@@ -274,4 +274,14 @@ const getUserByEmail=asyncHandler(async(req,res)=>{
   return res.status(200).json(new ApiResponse(200,user,"user fethched successfully"))
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp,removeJob,getUserByEmail}
+const changePassword=asyncHandler(async(req,res)=>{
+  const {email,password}=req.body
+  const user = await User.findOneAndUpdate({email},{
+    password
+  })
+
+return res.status(200).json(new ApiResponse(200,{},"password changed successfully"))
+  
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp,removeJob,getUserByEmail,changePassword}
