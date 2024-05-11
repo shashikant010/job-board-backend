@@ -263,4 +263,15 @@ const removeJob=asyncHandler(async(req,res)=>{
 
 })
 
-export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp,removeJob}
+
+const getUserByEmail=asyncHandler(async(req,res)=>{
+  const {email} = req.body
+  const user = await User.find({email})
+  if(!user){
+    throw new ApiError(404,"Email not registered")
+  }
+
+  return res.status(200).json(new ApiResponse(200,user,"user fethched successfully"))
+})
+
+export {registerUser,loginUser,currentUser,postjob,getAllJobs,getitembyid,applyForJob,searchjob,sendOtp,removeJob,getUserByEmail}
